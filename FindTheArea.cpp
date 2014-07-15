@@ -5,7 +5,7 @@
 
 using namespace std;
 
-// A simple demonstration of function overloading
+// A simple demonstration of method overloading
 
 void myHeader(string name, int lab, string date, int question, string purpose)
 {
