@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// This program allows you to input various parameters for bus routes and recieve various details for them
+
 void myHeader(string name, int lab, string date, int question, string purpose);
 void displayMenu();
 void displayBusRoute(int list[5][5]);
