@@ -4,6 +4,9 @@
 #include <iomanip>
 
 using namespace std;
+
+// A simple demonstration of function overloading
+
 void myHeader(string name, int lab, string date, int question, string purpose)
 {
 	cout << "*********************************************************" << endl;
