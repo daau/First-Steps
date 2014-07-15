@@ -1,0 +1,327 @@
+#include<iostream>
+#include<string>
+#include<iomanip>
+#include<istream>
+
+using namespace std;
+
+// This program demonstrates the usage of classes. This program will create a table of cars that can 
+// be sorted by various attributes.
+
+struct Car // Struct for car
+{
+	// Make, model, year, and price
+	string make;
+	string model;
+	int year;
+	double price;
+
+
+};
+
+void dataEntry(Car cdb[], int size);
+void sortArrayPrice(Car myArray[], int size);
+void sortArrayYear(Car myArray[], int size);
+double findAveragePrice(Car myArray[], int size);
+void searchArrayMake(Car myArray[], int size, string make);
+void searchArrayModel(Car myArray[], int size, string model);
+void searchArray(Car &myArray, int size, double price_low, double price_high);
+void printArray(Car *myArray, int size);
+void myHeader(string name, int lab, string date, int question, string purpose);
+void displayMenu();
+
+
+int main()
+{
+	string car = "";
+	char choice = ' ';
+	int size;
+	bool continueYesNo = true;
+
+	string model;
+	string make;
+	
+	myHeader("Daniel Au", 8, "December 3rd", 3, "Car Dynamic Arrays");
+
+	// Dynamically created array
+	cout << "Enter number of cars in the database: ";
+	cin >> size;
+	cout << "\nCreating the database...\n\n";
+	Car *carArray = new Car[size];
+	
+	dataEntry(carArray, size);
+
+	//Start of the loop
+
+	while (continueYesNo)
+	{
+		displayMenu();
+
+		cout << "Enter choice: ";
+		cin >> choice;
+		choice = toupper(choice);
+
+		// Switch statement
+		switch (choice)
+		{
+		case 'A': // Sort contents of the array least to greatest by price
+		{
+					  sortArrayPrice(carArray, size);
+					  cout << "\nThe array has been sorted!\n\nDone!\n\n";
+					  break;
+		}
+		case 'B': // Sort the contents greatest to least by year
+		{
+					  sortArrayYear(carArray, size);
+					  cout << "\nThe array has been sorted!\n\nDone!\n\n";
+					  break;
+		}
+		case 'C': // Find the average price
+		{
+					  cout << "\nAverage price is $" << findAveragePrice(carArray, size) << endl << endl << "Done!\n\n";
+					  break;
+		}
+		case 'D': // Search array for given model
+		{
+					  cout << "Enter the model you are searching: ";
+					  cin.ignore();
+					  getline(cin, model);
+					  cout << endl;
+					  searchArrayModel(carArray, size, model);
+					  break;
+		}
+		case 'E': // Search array for given make
+		{
+					  cout << "\nEnter the make you are searching: ";
+					  cin.ignore();
+					  getline(cin, make);
+					  cout << endl;
+					  searchArrayMake(carArray, size, make);
+					  break;
+		}
+		case 'F': // Search array for range of prices
+		{
+					  double low;
+					  double high;
+					  cout << "Enter lowest price: ";
+					  cin >> low;
+					  cout << "Enter highest price: ";
+					  cin >> high;
+					  searchArray(*carArray, size, low, high);
+					  break;
+		}
+		case 'G': // Print list of cars
+		{
+					  printArray(carArray, size);
+					  break;
+		}
+		case 'H': // Exit
+		{
+					  continueYesNo = false;
+					  cout << "\nClosing the database! The dynamic array has been released!\n";
+					  delete [] carArray;
+					  break;
+		}
+		}
+		// Getline function must be used to accept multiple words
+	}
+}
+
+// Functions
+void dataEntry(Car cdb[], int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		cout << "Enter the make for car " << i + 1 << ": ";
+		cin.ignore();
+		getline(cin, cdb[i].make);
+		// cin >> cdb[i].make;
+		cout << "Enter the model for car " << i + 1 << ": ";
+		getline(cin, cdb[i].model);
+		cout << "Enter the year for car " << i + 1 << ": ";
+		cin >> cdb[i].year;
+		while ((cdb[i].year > 2014) || (cdb[i].year < 1186))
+		{
+			cout << "Error, invalid year. Enter the year for car " << i + 1 << ": ";
+			cin >> cdb[i].year;
+		}
+		cout << "Enter the price for car " << i + 1 << ": ";
+		cin >> cdb[i].price;
+		while (cdb[i].price < 1)
+		{
+			cout << "Error, invalid price. Enter the price for car " << i + 1 << ": ";
+			cin >> cdb[i].price;
+		}
+		cout << endl;
+
+	}
+
+	cout << "Database has been created\n\n\n";
+}
+void sortArrayPrice(Car myArray[], int size)
+{
+	Car holder;
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < (size - 1); j++)
+		{
+			if (myArray[j].price > myArray[j+1].price)
+			{
+				holder = myArray[j];
+				myArray[j] = myArray[j + 1];
+				myArray[j + 1] = holder;
+			}
+
+		}
+	}
+}
+void sortArrayYear(Car myArray[], int size)
+{
+	Car holder;
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < (size - 1); j++)
+		{
+			if (myArray[j].year < myArray[j + 1].year)
+			{
+				holder = myArray[j];
+				myArray[j] = myArray[j + 1];
+				myArray[j + 1] = holder;
+			}
+		}
+	}
+}
+double findAveragePrice(Car myArray[], int size)
+{
+	double average = 0;
+	double sum = 0;
+	for (int i = 0; i < size; i++)
+	{
+		sum += myArray[i].price;
+	}
+	average = sum / size;
+	return average;
+}
+void searchArrayMake(Car myArray[], int size, string make)
+{
+	int counter = 0;
+	bool yesNo = true;
+	for (int i = 0; i < size; i++)
+	{
+		if (make == myArray[i].make)
+		{
+			counter += 1;
+			if (yesNo == true)
+			{
+				cout << "Found!\nDatabase Listing...\n\n";
+				cout << "Car listing:\nMake             Model       Year   Price\n";
+				cout << "------------------------------------------\n";
+				yesNo = false;
+			}
+			cout << left << setw(17) << myArray[i].make;
+			cout << left << setw(12) << myArray[i].model;
+			cout << left << setw(7) << myArray[i].year;
+			cout << left << setw(8) << myArray[i].price << endl;
+
+		}
+	}
+	if (counter == 0)
+	{
+		cout << "Not found!!\n\n";
+	}
+	cout << endl << endl;
+}
+void searchArrayModel(Car myArray[], int size, string model)
+{
+	int counter = 0;
+	bool yesNo = true;
+	for (int i = 0; i < size; i++)
+	{
+		if (model == myArray[i].model)
+		{
+			counter += 1;
+			if (yesNo == true)
+			{
+				cout << "Found!\nDatabase Listing...\n\n";
+				cout << "Car listing:\nMake             Model       Year   Price\n";
+				cout << "------------------------------------------\n";
+				yesNo = false;
+			}
+			cout << left << setw(17) << myArray[i].make;
+			cout << left << setw(12) << myArray[i].model;
+			cout << left << setw(7) << myArray[i].year;
+			cout << left << setw(8) << myArray[i].price << endl;
+
+		}
+	}
+	if (counter == 0)
+	{
+		cout << "Not found!!\n\n";
+	}
+	cout << endl << endl;
+}
+void searchArray(Car &myArray, int size, double price_low, double price_high)
+{
+	Car *x = &myArray;
+	int counter = 0;
+	bool yesNo = true;
+	for (int i = 0; i < size; i++)
+	{
+		if ((x[i].price > price_low) && (x[i].price < price_high))
+		{
+			counter += 1;
+			if (yesNo == true)
+			{
+				cout << "\nFound!\nDatabase Listing...\n\n";
+				cout << "Car listing:\nMake             Model       Year   Price\n";
+				cout << "------------------------------------------\n";
+				yesNo = false;
+			}
+			cout << left << setw(17) << x[i].make;
+			cout << left << setw(12) << x[i].model;
+			cout << left << setw(7) << x[i].year;
+			cout << left << setw(8) << x[i].price << endl;
+		}
+	}
+
+	if (counter == 0)
+	{
+		cout << "\nNot found!!\n\n";
+	}
+
+}
+void printArray(Car *myArray, int size)
+{
+	cout << "\nCar listing:\nMake             Model       Year   Price\n";
+	cout << "------------------------------------------\n";
+	for (int i = 0; i < size; i++)
+	{
+		cout << left << setw(17) << myArray[i].make;
+		cout << left << setw(12) << myArray[i].model;
+		cout << left << setw(7) << myArray[i].year;
+		cout << left << setw(8) << myArray[i].price << endl;
+	}
+
+	cout << "\n------------------------------------------\n\nDone!\n\n";
+}
+void myHeader(string name, int lab, string date, int question, string purpose)
+{
+	cout << "*********************************************************" << endl;
+	cout << "			" << name << endl;
+	cout << "			Date: " << date << endl;
+	cout << "			Lab " << lab << " Question " << question << endl;
+	cout << "			Purpose " << purpose << endl;
+	cout << "*********************************************************" << endl << endl;
+}
+void displayMenu()
+{
+	cout << "------------------------------------------\n";
+	cout << "a. Sort by price\n";
+	cout << "b. Sort by year\n";
+	cout << "c. Find the average price\n";
+	cout << "d. Search by model\n";
+	cout << "e. Search by make\n";
+	cout << "f. Search by price range\n";
+	cout << "g. Print database\n";
+	cout << "h. Exit\n\n";
+}
